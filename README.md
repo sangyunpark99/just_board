@@ -29,3 +29,5 @@
 ![게시글 검색](https://github.com/user-attachments/assets/4e4496b5-1e19-4f55-b5de-e6b02e8e2366)
 
 ### DB ERD
+<img width="846" alt="image" src="https://github.com/user-attachments/assets/88788db7-3f4f-407a-9c84-14f50a51a377">
+
