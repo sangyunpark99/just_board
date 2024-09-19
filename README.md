@@ -21,5 +21,11 @@
 ### 게시판
 
 
-게시글 등록 시퀀스
-![게시글 등록](https://github.com/user-attachments/assets/a9c6ef82-7095-4086-8035-4f6cd74436f8)
+#### 게시글 등록 시퀀스
+![게시글 등록](https://github.com/user-attachments/assets/dc540654-d5bc-4ddb-aced-489aae9adcb4)
+
+
+#### 게시글 검색 시퀀스
+![게시글 검색](https://github.com/user-attachments/assets/4e4496b5-1e19-4f55-b5de-e6b02e8e2366)
+
+### DB ERD
