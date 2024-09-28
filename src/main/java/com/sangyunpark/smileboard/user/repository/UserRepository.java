@@ -3,12 +3,16 @@ package com.sangyunpark.smileboard.user.repository;
 import com.sangyunpark.smileboard.user.domain.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByUserId(String id);
+    Optional<User> findByUserIdAndPassword(String id, String password);
 
-    Optional<User> findUserByUserIdAndPassword(String id, String password);
+    Long countByUserId(String id);
 
-    Optional<User> findUserByUserId(String id);
+    Optional<User> findByUserId(String id);
+
+    void deleteByUserIdAndPassword(String id, String password);
 }
