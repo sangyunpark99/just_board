@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class UserInfoRequest {
+public class UserDeleteRequest {
 
     @NotBlank
     private String id;

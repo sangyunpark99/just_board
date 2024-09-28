@@ -7,11 +7,8 @@ import lombok.Getter;
 public class UserUpdatePasswordRequest {
 
     @NotBlank
-    private String id;
+    private String beforePassword;
 
     @NotBlank
-    private String password;
-
-    @NotBlank
-    private String newPassword;
+    private String afterPassword;
 }
