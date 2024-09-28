@@ -1,20 +1,106 @@
 package com.sangyunpark.smileboard.user.service;
 
-import com.sangyunpark.smileboard.user.dto.request.UserDto;
+import static com.sangyunpark.smileboard.user.exception.errorCode.ErrorCode.*;
+import static com.sangyunpark.smileboard.user.exception.errorCode.ErrorCode.DUPLICATED_ID;
+import static com.sangyunpark.smileboard.user.utils.EncryptUtils.encrypt;
 
-public interface UserService {
+import com.sangyunpark.smileboard.user.domain.User;
+import com.sangyunpark.smileboard.user.dto.UserDto;
+import com.sangyunpark.smileboard.user.dto.UserType;
+import com.sangyunpark.smileboard.user.dto.request.UserLoginRequest;
+import com.sangyunpark.smileboard.user.dto.request.UserSignupRequest;
+import com.sangyunpark.smileboard.user.dto.request.UserUpdatePasswordRequest;
+import com.sangyunpark.smileboard.user.dto.request.UserDeleteRequest;
+import com.sangyunpark.smileboard.user.exception.DuplicatedIdException;
+import com.sangyunpark.smileboard.user.exception.NotFoundSession;
+import com.sangyunpark.smileboard.user.exception.UserNotFoundException;
+import com.sangyunpark.smileboard.user.repository.UserRepository;
+import com.sangyunpark.smileboard.user.utils.EncryptUtils;
+import com.sangyunpark.smileboard.user.utils.SessionUtils;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-    void signup(UserDto userDto);
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserService {
 
-    UserDto login(String id, String password);
+    private final UserRepository userRepository;
 
-    void updatePassword(String id,String password, String newPassword);
+    @Transactional
+    public void signup(final UserSignupRequest request) {
 
-    Boolean isDuplicatedId(String id);
+        if (isDuplicated(request.getUserId())) {
+            throw new DuplicatedIdException(DUPLICATED_ID);
+        }
 
-    UserDto getUserInfo(String userId, String password);
+        User user = request.toEntity();
 
-    void deleteUser(String id, String password);
+        userRepository.save(user);
+    }
 
-    void logout(String id);
+    @Transactional(readOnly = true)
+    public void login(final UserLoginRequest request, final HttpSession session) {
+
+        String encryptPassword = EncryptUtils.encrypt(request.getPassword());
+
+        User user = userRepository.findByUserIdAndPassword(request.getUserId(), encryptPassword)
+                .orElseThrow(() -> new UserNotFoundException(
+                        USER_NOT_FOUND));
+
+        if(user.getType() == UserType.DEFAULT) {
+            SessionUtils.setLoginDefaultId(session, request.getUserId());
+        }else {
+            SessionUtils.setLoginAdminId(session, request.getUserId());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isDuplicated(final String id) {
+        return userRepository.countByUserId(id) == 1;
+    }
+
+    @Transactional(readOnly = true)
+    public UserDto getUserInfo(final HttpSession session) {
+
+        String id = SessionUtils.getLoginDefaultId(session) == null ? SessionUtils.getLoginAdminId(session) : SessionUtils.getLoginDefaultId(session);
+
+        if(id == null) {
+            throw new NotFoundSession(SESSION_NOT_FOUND);
+        }
+
+        User user = userRepository.findByUserId(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        return UserDto.fromEntity(user);
+    }
+
+    @Transactional(readOnly = true)
+    public void updatePassword(final UserUpdatePasswordRequest request, final HttpSession session) {
+
+        String encryptBeforePassword = EncryptUtils.encrypt(request.getBeforePassword());
+
+        String id = SessionUtils.getLoginDefaultId(session);
+        if(id == null) SessionUtils.getLoginAdminId(session);
+
+        User user = userRepository.findByUserIdAndPassword(id, encryptBeforePassword).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        user.updatePassword(encrypt(request.getAfterPassword()));
+    }
+
+    @Transactional
+    public void delete(final UserDeleteRequest request, final HttpSession session) {
+
+        String id = request.getId();
+        String encryptPassword = EncryptUtils.encrypt(request.getPassword());
+
+        userRepository.findByUserIdAndPassword(request.getId(), encryptPassword)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        userRepository.deleteByUserIdAndPassword(id, encryptPassword);
+
+        SessionUtils.clear(session);
+    }
 }
