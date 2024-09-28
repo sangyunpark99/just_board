@@ -1,6 +1,9 @@
 package com.sangyunpark.smileboard.user.dto.response;
 
-import com.sangyunpark.smileboard.user.dto.request.UserDto;
+import com.sangyunpark.smileboard.user.dto.UserDto;
+import com.sangyunpark.smileboard.user.dto.UserStatus;
+import com.sangyunpark.smileboard.user.dto.UserType;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,16 +12,26 @@ import lombok.Getter;
 public class UserInfoResponse {
 
     private String userId;
+
     private String nickName;
-    private Boolean isAdmin;
-    private String status;
+
+    private UserType type;
+
+    private UserStatus status;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     public static UserInfoResponse fromUserDto(UserDto userDto) {
+
         return UserInfoResponse.builder()
                 .userId(userDto.getUserId())
+                .type(userDto.getType())
+                .status(userDto.getStatus())
                 .nickName(userDto.getNickName())
-                .isAdmin(userDto.getIsAdmin())
-                .status(userDto.getStatus().toString())
+                .createdAt(userDto.getCreatedAt())
+                .updatedAt(userDto.getUpdatedAt())
                 .build();
     }
 }
