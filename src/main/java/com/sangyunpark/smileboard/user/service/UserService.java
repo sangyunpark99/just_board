@@ -67,10 +67,7 @@ public class UserService {
     public UserDto getUserInfo(final HttpSession session) {
 
         String id = SessionUtils.getLoginDefaultId(session) == null ? SessionUtils.getLoginAdminId(session) : SessionUtils.getLoginDefaultId(session);
-
-        if(id == null) {
-            throw new NotFoundSession(SESSION_NOT_FOUND);
-        }
+        if(id == null) throw new NotFoundSession(SESSION_NOT_FOUND);
 
         User user = userRepository.findByUserId(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
@@ -78,14 +75,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public void updatePassword(final UserUpdatePasswordRequest request, final HttpSession session) {
+    public void updatePassword(final String userId, UserUpdatePasswordRequest request) {
 
         String encryptBeforePassword = EncryptUtils.encrypt(request.getBeforePassword());
 
-        String id = SessionUtils.getLoginDefaultId(session);
-        if(id == null) SessionUtils.getLoginAdminId(session);
-
-        User user = userRepository.findByUserIdAndPassword(id, encryptBeforePassword).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        User user = userRepository.findByUserIdAndPassword(userId, encryptBeforePassword).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         user.updatePassword(encrypt(request.getAfterPassword()));
     }
