@@ -1,6 +1,8 @@
 package com.sangyunpark.smileboard.user.controller;
 
+import com.sangyunpark.smileboard.user.aop.LoginCheck;
 import com.sangyunpark.smileboard.user.dto.UserDto;
+import com.sangyunpark.smileboard.user.dto.UserType;
 import com.sangyunpark.smileboard.user.dto.request.UserLoginRequest;
 import com.sangyunpark.smileboard.user.dto.request.UserSignupRequest;
 import com.sangyunpark.smileboard.user.dto.request.UserUpdatePasswordRequest;
@@ -61,9 +63,10 @@ public class UserController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<UserUpdatePasswordResponse> updatePassword(@Valid @RequestBody UserUpdatePasswordRequest request, HttpSession session) {
+    @LoginCheck(type = UserType.DEFAULT)
+    public ResponseEntity<UserUpdatePasswordResponse> updatePassword(String userId, @Valid @RequestBody UserUpdatePasswordRequest request) {
 
-        userService.updatePassword(request, session);
+        userService.updatePassword(userId, request);
 
         return ResponseEntity.ok(new UserUpdatePasswordResponse());
     }
