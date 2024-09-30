@@ -22,10 +22,6 @@ public class UserSignupRequest {
     @NotNull
     private UserType type;
 
-    private UserSignupRequest() {
-
-    }
-
     public UserSignupRequest(final String userId, final String password, final String nickName, final UserType type) {
         this.userId = userId;
         this.password = password;
