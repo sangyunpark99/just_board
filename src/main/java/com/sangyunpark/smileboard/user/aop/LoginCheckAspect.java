@@ -1,6 +1,6 @@
 package com.sangyunpark.smileboard.user.aop;
 
-import static com.sangyunpark.smileboard.user.exception.errorCode.ErrorCode.SESSION_NOT_FOUND;
+import static com.sangyunpark.smileboard.user.error.UserErrorCode.SESSION_NOT_FOUND;
 
 import com.sangyunpark.smileboard.user.exception.NotFoundSession;
 import com.sangyunpark.smileboard.user.utils.SessionUtils;
