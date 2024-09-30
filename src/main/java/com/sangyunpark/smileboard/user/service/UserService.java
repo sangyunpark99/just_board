@@ -1,7 +1,7 @@
 package com.sangyunpark.smileboard.user.service;
 
-import static com.sangyunpark.smileboard.user.exception.errorCode.ErrorCode.*;
-import static com.sangyunpark.smileboard.user.exception.errorCode.ErrorCode.DUPLICATED_ID;
+import static com.sangyunpark.smileboard.user.error.UserErrorCode.*;
+import static com.sangyunpark.smileboard.user.error.UserErrorCode.DUPLICATED_ID;
 import static com.sangyunpark.smileboard.user.utils.EncryptUtils.encrypt;
 
 import com.sangyunpark.smileboard.user.domain.User;
