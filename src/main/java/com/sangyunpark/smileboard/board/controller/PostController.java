@@ -2,7 +2,7 @@ package com.sangyunpark.smileboard.board.controller;
 
 import com.sangyunpark.smileboard.board.dto.PostDto;
 
-import com.sangyunpark.smileboard.board.dto.request.PostDeleteResponse;
+import com.sangyunpark.smileboard.board.dto.response.PostDeleteResponse;
 import com.sangyunpark.smileboard.board.dto.request.PostRegisterRequest;
 import com.sangyunpark.smileboard.board.dto.request.PostUpdateRequest;
 import com.sangyunpark.smileboard.board.dto.response.PostRegisterResponse;
