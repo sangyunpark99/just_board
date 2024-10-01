@@ -37,6 +37,7 @@ public class PostDto {
 
     public static PostDto fromEntity(Post post) {
         return PostDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContents())
                 .type(post.getType())
