@@ -9,7 +9,7 @@ import com.sangyunpark.smileboard.board.dto.PostDto;
 import com.sangyunpark.smileboard.board.dto.request.PostRegisterRequest;
 import com.sangyunpark.smileboard.board.dto.request.PostUpdateRequest;
 import com.sangyunpark.smileboard.board.exception.NotFoundPostException;
-import com.sangyunpark.smileboard.board.exception.NotMatchUser;
+import com.sangyunpark.smileboard.board.exception.NotMatchUserException;
 import com.sangyunpark.smileboard.board.repository.PostRepository;
 import com.sangyunpark.smileboard.category.domain.Category;
 import com.sangyunpark.smileboard.category.exception.CategoryNotFoundException;
@@ -82,7 +82,7 @@ public class PostService {
         List<Post> posts = user.getPosts();
 
         if(!posts.contains(post)) {
-            throw new NotMatchUser(NOT_MATCH_USER);
+            throw new NotMatchUserException(NOT_MATCH_USER);
         }
 
         post.removeRelation();
