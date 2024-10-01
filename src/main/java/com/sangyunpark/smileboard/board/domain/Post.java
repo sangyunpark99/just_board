@@ -3,6 +3,7 @@ package com.sangyunpark.smileboard.board.domain;
 import com.sangyunpark.smileboard.board.dto.PostDto;
 import com.sangyunpark.smileboard.board.dto.PostWriterType;
 import com.sangyunpark.smileboard.category.domain.Category;
+import com.sangyunpark.smileboard.file.domain.File;
 import com.sangyunpark.smileboard.global.BaseEntity;
 import com.sangyunpark.smileboard.user.domain.User;
 import jakarta.persistence.Entity;
@@ -13,6 +14,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -38,6 +42,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "category_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
+
+    @OneToMany(mappedBy = "post")
+    private List<File> files = new ArrayList<>();
 
     protected Post() {
 
