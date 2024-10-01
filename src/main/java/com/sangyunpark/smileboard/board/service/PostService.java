@@ -12,7 +12,7 @@ import com.sangyunpark.smileboard.board.exception.NotFoundPostException;
 import com.sangyunpark.smileboard.board.exception.NotMatchUserException;
 import com.sangyunpark.smileboard.board.repository.PostRepository;
 import com.sangyunpark.smileboard.category.domain.Category;
-import com.sangyunpark.smileboard.category.exception.CategoryNotFoundException;
+import com.sangyunpark.smileboard.category.exception.NotFoundCategoryException;
 import com.sangyunpark.smileboard.category.repository.CategoryRepository;
 import com.sangyunpark.smileboard.user.domain.User;
 import com.sangyunpark.smileboard.user.exception.UserNotFoundException;
@@ -20,6 +20,7 @@ import com.sangyunpark.smileboard.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,7 @@ public class PostService {
         User user = userRepository.findByUserId(userId).orElseThrow(() -> new UserNotFoundException(
                 USER_NOT_FOUND));
 
-        Category category = categoryRepository.findByTitle(request.getCategory()).orElseThrow(() -> new CategoryNotFoundException(
+        Category category = categoryRepository.findByTitle(request.getCategory()).orElseThrow(() -> new NotFoundCategoryException(
                 CATEGORY_NOT_FOUND));
 
         Post post = request.toEntity();
@@ -58,6 +59,7 @@ public class PostService {
         return posts;
     }
 
+    @CacheEvict(value = "getPostsByCategory", key = "'getPostsByCategory' + #request.category + #request.postId")
     @Transactional
     public PostDto update(final String userId, final PostUpdateRequest request) {
 

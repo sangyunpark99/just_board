@@ -6,7 +6,7 @@ import static com.sangyunpark.smileboard.user.error.UserErrorCode.USER_NOT_FOUND
 import com.sangyunpark.smileboard.category.domain.Category;
 import com.sangyunpark.smileboard.category.dto.request.CategoryCreateRequest;
 import com.sangyunpark.smileboard.category.dto.request.CategoryUpdateRequest;
-import com.sangyunpark.smileboard.category.exception.CategoryNotFoundException;
+import com.sangyunpark.smileboard.category.exception.NotFoundCategoryException;
 import com.sangyunpark.smileboard.category.repository.CategoryRepository;
 import com.sangyunpark.smileboard.user.exception.UserNotFoundException;
 import com.sangyunpark.smileboard.user.repository.UserRepository;
@@ -39,7 +39,7 @@ public class CategoryService {
 
         userRepository.findByUserId(userId).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundCategoryException(
                 CATEGORY_NOT_FOUND));
 
         category.update(request.getTitle());
@@ -50,7 +50,7 @@ public class CategoryService {
 
         userRepository.findByUserId(userId).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(CATEGORY_NOT_FOUND));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundCategoryException(CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
     }
