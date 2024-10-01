@@ -1,8 +1,10 @@
 package com.sangyunpark.smileboard.user.domain;
 
+import com.sangyunpark.smileboard.board.domain.Post;
 import com.sangyunpark.smileboard.global.BaseEntity;
 import com.sangyunpark.smileboard.user.dto.UserStatus;
 import com.sangyunpark.smileboard.user.dto.UserType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +12,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -36,6 +41,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+
     protected User() {
 
     }
@@ -52,5 +60,9 @@ public class User extends BaseEntity {
 
     public void updatePassword(String password){
         this.password = password;
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
     }
 }
