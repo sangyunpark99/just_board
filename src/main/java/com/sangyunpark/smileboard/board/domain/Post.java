@@ -3,6 +3,7 @@ package com.sangyunpark.smileboard.board.domain;
 import com.sangyunpark.smileboard.board.dto.PostDto;
 import com.sangyunpark.smileboard.board.dto.PostWriterType;
 import com.sangyunpark.smileboard.category.domain.Category;
+import com.sangyunpark.smileboard.comment.domain.Comment;
 import com.sangyunpark.smileboard.file.domain.File;
 import com.sangyunpark.smileboard.global.BaseEntity;
 import com.sangyunpark.smileboard.user.domain.User;
@@ -46,6 +47,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
+
     protected Post() {
 
     }
@@ -83,6 +87,11 @@ public class Post extends BaseEntity {
 
     public void addCategory(Category category) {
         this.category = category;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.addPost(this);
     }
 
     public void removeRelation() {
