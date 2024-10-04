@@ -36,7 +36,6 @@ public class LoginCheckAspect {
         }
 
         if(id == null) {
-            log.error(proceedingJoinPoint.toString() + "userId : " + id);
             throw new NotFoundSession(SESSION_NOT_FOUND);
         }
 
